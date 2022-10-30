@@ -1,20 +1,42 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { ThemeProvider } from "styled-components";
+import { NavigationContainer } from "@react-navigation/native";
+import {
+  useFonts,
+  Inter_700Bold,
+  Inter_400Regular,
+  Inter_300Light,
+} from "@expo-google-fonts/inter";
+import "react-native-gesture-handler";
+import { Provider } from "react-redux";
+
+import { store } from "./src/store";
+
+import { theme } from "./src/styles/theme";
+
+import RootRoutes from "./src/routes/root.routes";
 
 export default function App() {
+  let [fontsLoaded] = useFonts({
+    Inter_700Bold,
+    Inter_400Regular,
+    Inter_300Light,
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Provider store={store}>
+      <SafeAreaProvider>
+        <ThemeProvider theme={theme}>
+          <NavigationContainer>
+            <RootRoutes />
+          </NavigationContainer>
+        </ThemeProvider>
+      </SafeAreaProvider>
+    </Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
