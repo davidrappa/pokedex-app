@@ -12,7 +12,7 @@
 <br>
 
 <p align="center">
-  <img alt="Pokedex" src=".github/pokedex.png" width="100%">
+  <img alt="Pokedex" src=".github/cover.jpg" width="100%">
 </p>
 
 ## ✨ Tecnologias
