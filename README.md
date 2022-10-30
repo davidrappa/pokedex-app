@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img alt="Pokedex App" title="Pokedex App" src=".github/logo.png" />
+  POKEDEX APP (React Native)
 </h1>
 
 <p align="center">
