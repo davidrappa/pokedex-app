@@ -10,6 +10,7 @@ import {
 } from "@expo-google-fonts/inter";
 import "react-native-gesture-handler";
 import { Provider } from "react-redux";
+import { StatusBar } from "react-native";
 
 import { store } from "./src/store";
 
@@ -24,7 +25,7 @@ export default function App() {
     Inter_300Light,
   });
 
-  if (!fontsLoaded) {
+  if (!fontsLoaded && !store) {
     return null;
   }
 
@@ -33,6 +34,7 @@ export default function App() {
       <SafeAreaProvider>
         <ThemeProvider theme={theme}>
           <NavigationContainer>
+            <StatusBar backgroundColor="transparent" translucent />
             <RootRoutes />
           </NavigationContainer>
         </ThemeProvider>

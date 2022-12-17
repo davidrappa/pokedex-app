@@ -1,8 +1,17 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useSelector, useDispatch } from "react-redux";
 
+import { pokemonsListSlice } from "./slices/pokemonsList";
+
 export const store = configureStore({
-  reducer: {},
+  reducer: {
+    pokemonsList: pokemonsListSlice.reducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      immutableCheck: false,
+      serializableCheck: false,
+    }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

@@ -38,7 +38,7 @@ Você pode visualizar o layout do projeto através [desse link](https://www.figm
 - Instale as dependências com `yarn`
 - Inicie o serviço com `yarn start` ou `expo start`
 
-## 📄 Author
+## 📄 Autor
 
 - Email: davidrappa@outlook.com
 - LinkedIn: [@davidrappa1](https://www.linkedin.com/in/davidrappa1/)
