@@ -2,29 +2,38 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import { getPokemons, getSpecificPokemon } from "../../services/pokemons";
 
-import { RootState } from "..";
+import { Pokemon } from "../../interfaces/pokemons";
 
 export const getPokemonsList = createAsyncThunk(
   "pokemonsList/getPokemonsList",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, dispatch }) => {
     try {
       const data = await getPokemons();
 
-      return { data };
+      const pokemons = await Promise.all(
+        data?.results.map(async (pokemon: Pokemon) => {
+          const {
+            payload: { id, types },
+          } = await dispatch(getMoreInfoAboutPokemonsByUrl(pokemon.url));
+
+          return { name: pokemon.name, id, types };
+        })
+      );
+
+      return { pokemons };
     } catch (err) {
       return rejectWithValue(err);
     }
   }
 );
 
-export const getSpecificPokemonOnList = createAsyncThunk(
-  "pokemonsList/getSpecificPokemonOnList",
-  async (name: string, { rejectWithValue }) => {
+export const getMoreInfoAboutPokemonsByUrl = createAsyncThunk(
+  "pokemonsList/getMoreInfoAboutPokemonsByUrl",
+  async (url: string, { rejectWithValue }) => {
     try {
-      const data = await getSpecificPokemon(name);
+      const { id, types } = await getSpecificPokemon(url);
 
-      console.log(data);
-      return { data };
+      return { id, types };
     } catch (err) {
       return rejectWithValue(err);
     }
@@ -47,32 +56,13 @@ export const pokemonsListSlice = createSlice({
       state.pageStatus = "loading";
     });
     builder.addCase(getPokemonsList.fulfilled, (state, { payload }) => {
-      const { data } = payload;
+      const { pokemons } = payload;
 
       Object.assign(state, {
-        data,
+        pokemons,
         pageStatus: "success",
       });
     });
-    builder.addCase(getSpecificPokemonOnList.rejected, (state) => {
-      state.pageStatus = "error";
-    });
-    builder.addCase(getSpecificPokemonOnList.pending, (state) => {
-      state.pageStatus = "loading";
-    });
-    builder.addCase(
-      getSpecificPokemonOnList.fulfilled,
-      (state, { payload }) => {
-        const { data } = payload;
-
-        console.log(data);
-
-        Object.assign(state, {
-          pokemons: [...state.pokemons, data],
-          pageStatus: "success",
-        });
-      }
-    );
   },
 });
 
