@@ -1,5 +1,6 @@
-import { Dimensions } from "react-native";
+import { Dimensions, FlatList, FlatListProps } from "react-native";
 import styled, { css } from "styled-components/native";
+import { Pokemon } from "../../interfaces/pokemons";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -26,3 +27,16 @@ export const Title = styled.Text`
     margin-top: -70px;
   `}
 `;
+
+export const List = styled(
+  FlatList as new (props: FlatListProps<Pokemon>) => FlatList<Pokemon>
+).attrs({
+  showsVerticalScrollIndicator: false,
+  contentContainerStyle: {
+    paddingBottom: 16,
+    paddingTop: 24,
+    paddingHorizontal: 20,
+    flexGrow: 1,
+    justifyContent: "flex-start",
+  },
+})``;

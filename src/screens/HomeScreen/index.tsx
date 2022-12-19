@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { FlatList } from "react-native";
+import React, { useEffect, useCallback } from "react";
 import { useNavigation } from "@react-navigation/native";
+
+import { Pokemon } from "../../interfaces/pokemons";
 
 import { Card, Loading } from "../../components";
 import Header from "./Header";
@@ -17,9 +18,18 @@ const HomeScreen = (): JSX.Element => {
   const pageStatus = useAppSelector((state) => state.pokemonsList.pageStatus);
   const pokemons = useAppSelector((state) => state.pokemonsList.pokemons);
 
-  useEffect(() => {
-    dispatch(getPokemonsList());
-  }, [dispatch]);
+  const renderItem = useCallback(({ item }: { item: Pokemon }) => {
+    return (
+      <Card
+        data={item}
+        onPress={() => {
+          handleNavigationPokemonDetail(item.id);
+        }}
+      />
+    );
+  }, []);
+
+  const keyExtractor = useCallback(({ id }: Pokemon) => id.toString(), []);
 
   const ListHeaderComponent = useCallback(() => {
     return <Header />;
@@ -28,6 +38,11 @@ const HomeScreen = (): JSX.Element => {
   function handleNavigationPokemonDetail(pokemonId: number) {
     console.log();
   }
+
+  useEffect(() => {
+    dispatch(getPokemonsList({}));
+  }, [dispatch]);
+
   return (
     <S.Container>
       {pageStatus === "loading" && (
@@ -36,23 +51,12 @@ const HomeScreen = (): JSX.Element => {
         </S.LoadingScreen>
       )}
       {pageStatus === "success" && (
-        <FlatList
+        <S.List
           ListHeaderComponent={ListHeaderComponent}
-          contentContainerStyle={{
-            paddingHorizontal: 20,
-            paddingBottom: 50,
-          }}
           data={pokemons}
-          keyExtractor={(pokemon) => pokemon.id.toString()}
+          keyExtractor={keyExtractor}
           showsVerticalScrollIndicator={false}
-          renderItem={({ item: pokemon }) => (
-            <Card
-              data={pokemon}
-              onPress={() => {
-                handleNavigationPokemonDetail(pokemon.id);
-              }}
-            />
-          )}
+          renderItem={renderItem}
         />
       )}
     </S.Container>
