@@ -2,12 +2,18 @@ import { api } from "./api";
 
 import { Pokemon, Request } from "../interfaces/pokemons";
 
-export const getPokemons = async () => {
+export const getPokemons = async (offset: number) => {
   try {
-    const response = await api.get("/pokemon");
-    const { results } = response.data;
+    const response = await api.get("/pokemon", {
+      params: {
+        limit: 10,
+        offset,
+      },
+    });
 
-    return { results };
+    const { results, count } = response.data;
+
+    return { results, count };
   } catch (err) {
     console.log(err);
   }

@@ -1,3 +1,5 @@
+type PageStatusType = "error" | "loading" | "success";
+
 type PokemonType = {
   type: {
     name: string;
@@ -14,4 +16,12 @@ export interface Pokemon {
   url: string;
   id: number;
   types: PokemonType[];
+}
+
+export interface IPokemonSlice {
+  pokemons: Pokemon[];
+  pageStatus: PageStatusType;
+  offset: number;
+  totalPokemons: number;
+  isLoadingNextPage: boolean;
 }

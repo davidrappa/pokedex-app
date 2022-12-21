@@ -33,10 +33,15 @@ export const List = styled(
 ).attrs({
   showsVerticalScrollIndicator: false,
   contentContainerStyle: {
-    paddingBottom: 16,
+    paddingBottom: 24,
     paddingTop: 24,
     paddingHorizontal: 20,
     flexGrow: 1,
     justifyContent: "flex-start",
   },
 })``;
+
+export const LoadingView = styled.View`
+  justify-content: center;
+  align-items: center;
+`;

@@ -1,11 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useSelector, useDispatch } from "react-redux";
 
-import { pokemonsListSlice } from "./slices/pokemonsList";
+import { pokemonsSlice } from "./slices/pokemons";
 
 export const store = configureStore({
   reducer: {
-    pokemonsList: pokemonsListSlice.reducer,
+    pokemons: pokemonsSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

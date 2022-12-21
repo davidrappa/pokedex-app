@@ -1,18 +1,7 @@
-import { Dimensions } from "react-native";
 import styled, { css } from "styled-components/native";
 
-const { width } = Dimensions.get("window");
-
 export const Container = styled.View`
-  margin-top: 80px;
-`;
-
-export const ImageBackground = styled.ImageBackground`
-  width: ${width}px;
-  height: 150px;
-  left: -20px;
-  position: absolute;
-  top: -50px;
+  margin-top: 40px;
 `;
 
 export const IconsView = styled.View`

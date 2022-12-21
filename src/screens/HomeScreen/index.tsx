@@ -1,22 +1,36 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, Fragment, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { RefreshControl } from "react-native";
 
-import { Pokemon } from "../../interfaces/pokemons";
+import { delay } from "@/utils/functions";
 
-import { Card, Loading } from "../../components";
+import { useAppDispatch, useAppSelector } from "@/store";
+import {
+  getMorePokemonsList,
+  getPokemonsList,
+  refreshingGetPokemons,
+} from "@/store/slices/pokemons";
+
+import { Pokemon } from "@/interfaces/pokemons";
+
+import { Card, Loading, SafeAreaView } from "@/components";
 import Header from "./Header";
-
-import { useAppDispatch, useAppSelector } from "../../store";
-import { getPokemonsList } from "../../store/slices/pokemonsList";
 
 import * as S from "./styles";
 
 const HomeScreen = (): JSX.Element => {
+  const [refreshing, setRefreshing] = useState(false);
+
   const { navigate } = useNavigation();
 
   const dispatch = useAppDispatch();
-  const pageStatus = useAppSelector((state) => state.pokemonsList.pageStatus);
-  const pokemons = useAppSelector((state) => state.pokemonsList.pokemons);
+  const pageStatus = useAppSelector((state) => state.pokemons.pageStatus);
+  const pokemons = useAppSelector((state) => state.pokemons.pokemons);
+  const totalPokemons = useAppSelector((state) => state.pokemons.totalPokemons);
+  const offset = useAppSelector((state) => state.pokemons.offset);
+  const isLoadingNextPage = useAppSelector(
+    (state) => state.pokemons.isLoadingNextPage
+  );
 
   const renderItem = useCallback(({ item }: { item: Pokemon }) => {
     return (
@@ -39,27 +53,67 @@ const HomeScreen = (): JSX.Element => {
     console.log();
   }
 
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+
+    await delay(1500);
+
+    dispatch(refreshingGetPokemons(true));
+    dispatch(getPokemonsList());
+
+    setRefreshing(false);
+  }, [dispatch]);
+
+  const ListFooterComponent = useCallback(() => {
+    return (
+      <Fragment>
+        {isLoadingNextPage && (
+          <S.LoadingView>
+            <Loading />
+          </S.LoadingView>
+        )}
+      </Fragment>
+    );
+  }, [isLoadingNextPage]);
+
   useEffect(() => {
-    dispatch(getPokemonsList({}));
+    dispatch(getPokemonsList());
   }, [dispatch]);
 
   return (
-    <S.Container>
-      {pageStatus === "loading" && (
-        <S.LoadingScreen>
-          <Loading />
-        </S.LoadingScreen>
-      )}
-      {pageStatus === "success" && (
-        <S.List
-          ListHeaderComponent={ListHeaderComponent}
-          data={pokemons}
-          keyExtractor={keyExtractor}
-          showsVerticalScrollIndicator={false}
-          renderItem={renderItem}
-        />
-      )}
-    </S.Container>
+    <SafeAreaView type="primary" forceInset={{ bottom: "never" }}>
+      <S.Container>
+        {pageStatus === "loading" && (
+          <S.LoadingScreen>
+            <Loading />
+          </S.LoadingScreen>
+        )}
+        {pageStatus === "success" && (
+          <S.List
+            ListHeaderComponent={ListHeaderComponent}
+            data={pokemons}
+            keyExtractor={keyExtractor}
+            showsVerticalScrollIndicator={false}
+            renderItem={renderItem}
+            onEndReachedThreshold={0.2}
+            ListFooterComponent={ListFooterComponent}
+            onEndReached={() =>
+              totalPokemons > offset &&
+              !isLoadingNextPage &&
+              dispatch(getMorePokemonsList())
+            }
+            refreshControl={
+              <RefreshControl
+                style={{ marginBottom: refreshing ? -20 : 0 }}
+                tintColor="#000"
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+              />
+            }
+          />
+        )}
+      </S.Container>
+    </SafeAreaView>
   );
 };
 
