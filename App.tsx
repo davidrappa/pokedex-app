@@ -34,7 +34,6 @@ export default function App() {
       <SafeAreaProvider>
         <ThemeProvider theme={theme}>
           <NavigationContainer>
-            <StatusBar backgroundColor="transparent" translucent />
             <RootRoutes />
           </NavigationContainer>
         </ThemeProvider>
