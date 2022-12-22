@@ -11,17 +11,15 @@ import {
   refreshingGetPokemons,
 } from "@/store/slices/pokemons";
 
-import { Pokemon } from "@/interfaces/pokemons";
+import { Pokemon, PokemonsNavigationProps } from "@/interfaces/pokemons";
 
 import { Card, Loading, SafeAreaView } from "@/components";
 import Header from "./Header";
 
 import * as S from "./styles";
 
-const HomeScreen = (): JSX.Element => {
+const HomeScreen = ({ navigation }: PokemonsNavigationProps): JSX.Element => {
   const [refreshing, setRefreshing] = useState(false);
-
-  const { navigate } = useNavigation();
 
   const dispatch = useAppDispatch();
   const pageStatus = useAppSelector((state) => state.pokemons.pageStatus);
@@ -34,12 +32,7 @@ const HomeScreen = (): JSX.Element => {
 
   const renderItem = useCallback(({ item }: { item: Pokemon }) => {
     return (
-      <Card
-        data={item}
-        onPress={() => {
-          handleNavigationPokemonDetail(item.id);
-        }}
-      />
+      <Card data={item} onPress={() => navigation.navigate("DetailScreen")} />
     );
   }, []);
 
@@ -48,10 +41,6 @@ const HomeScreen = (): JSX.Element => {
   const ListHeaderComponent = useCallback(() => {
     return <Header />;
   }, []);
-
-  function handleNavigationPokemonDetail(pokemonId: number) {
-    console.log();
-  }
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);

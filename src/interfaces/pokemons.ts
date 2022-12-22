@@ -1,4 +1,19 @@
+import { StackNavigationProp } from "@react-navigation/stack";
+
 type PageStatusType = "error" | "loading" | "success";
+
+export type PokemonRoutesProps = {
+  HomeScreen: undefined;
+  DetailScreen: undefined;
+};
+
+export type PokemonsScreensNavigationProp =
+  StackNavigationProp<PokemonRoutesProps>;
+
+export type PokemonsNavigationProps = {
+  navigation: PokemonsScreensNavigationProp;
+  route: {};
+};
 
 type PokemonType = {
   type: {

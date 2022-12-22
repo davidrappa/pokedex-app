@@ -1,7 +1,7 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import HomeScreen from "@/screens/HomeScreen";
+import { HomeScreen, DetailScreen } from "@/screens";
 
 const Root = createStackNavigator();
 
@@ -15,6 +15,7 @@ const RootRoutes = (): JSX.Element => {
     <Root.Navigator screenOptions={screenOptions} initialRouteName="HomeScreen">
       <Root.Group>
         <Root.Screen name="HomeScreen" component={HomeScreen} />
+        <Root.Screen name="DetailScreen" component={DetailScreen} />
       </Root.Group>
     </Root.Navigator>
   );
